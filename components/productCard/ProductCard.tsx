@@ -1,12 +1,28 @@
 "use client";
 import React from "react";
-import PropTypes from "prop-types";
+import Image from "next/image";
+import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeaf } from "@fortawesome/free-solid-svg-icons";
 import { ShinyButton } from "@/components/ui/shiny-button";
 
-const ProductCard = ({ product }: { product: any }) => (
-  <a
+// ✅ Define a type for product props
+interface Product {
+  slug: string;
+  name: string;
+  product_img?: string;
+  formula?: string;
+  category: string;
+  tagline?: string;
+  composition?: string;
+}
+
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => (
+  <Link
     href={`/products/${product.slug}`}
     className="group h-full flex flex-col rounded-xl overflow-hidden lg:shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out bg-white dark:bg-slate-800 border-2 border-transparent hover:border-[#4BAF47] hover:-translate-y-1 shadow-xs"
   >
@@ -14,17 +30,19 @@ const ProductCard = ({ product }: { product: any }) => (
       {/* Visual Header */}
       <div className="flex justify-center items-center h-48 bg-gray-50 dark:bg-slate-700">
         <div className="text-center">
-          <p className=" text-gray-700 dark:text-gray-300">
-            {product.product_img ? (
-              <img
-                src={product.product_img}
-                alt={product.name}
-                className="object-contain w-full h-full"
-              />
-            ) : (
-              <span>{product.formula}</span>
-            )}
-          </p>
+          {product.product_img ? (
+            <Image
+              src={product.product_img}
+              alt={product.name}
+              width={300} // ✅ must provide width & height
+              height={300}
+              className="object-contain w-full h-full"
+            />
+          ) : (
+            <span className="text-gray-700 dark:text-gray-300">
+              {product.formula}
+            </span>
+          )}
         </div>
       </div>
       {/* Category Tag */}
@@ -41,10 +59,12 @@ const ProductCard = ({ product }: { product: any }) => (
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-4 line-clamp-2 mt-8 lg:mt-0">
         {product.tagline}
       </p>
-      
-      {/* ✅ Composition Info (wrap text, no cut-off) */}
+
+      {/* ✅ Composition Info */}
       <div className="border-t border-gray-200 dark:border-slate-600 pt-4 mb-4">
-        <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2">Key Composition</p>
+        <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase mb-2">
+          Key Composition
+        </p>
         <div className="flex items-start gap-2">
           <FontAwesomeIcon icon={faLeaf} className="text-[#4BAF47] mt-1" />
           <p className="text-sm font-medium text-gray-700 dark:text-gray-300 break-words">
@@ -53,19 +73,14 @@ const ProductCard = ({ product }: { product: any }) => (
         </div>
       </div>
 
-      {/* If you want navigation, wrap with Link */}
-      {/* import Link from 'next/link' at the top if not already */}
-      <a href={`/products/id/ProductDetailPage`} className="w-full mt-auto">
+      {/* ✅ Use Link instead of <a> */}
+      <Link href={`/products/id/ProductDetailPage`} className="w-full mt-auto">
         <ShinyButton className="bg-[#4BAF47] border-none text-white pointer-events-none w-full">
           Enquire Now
         </ShinyButton>
-      </a>
+      </Link>
     </div>
-  </a>
+  </Link>
 );
-
-ProductCard.propTypes = {
-  product: PropTypes.object.isRequired,
-};
 
 export default ProductCard;
